@@ -1,20 +1,32 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 
 const POLY_IMAGE = "/assets/hero-polygonal.jpg";
 const ORIG_IMAGE = "/assets/hero-original.jpg";
 
-const HEADLINE = "Sarthak Kiran Londhe";
-const SUBHEAD =
-  "Innovative R&D Intern | Computer Engineering Student | Data & AI Enthusiast";
-const BIO =
-  "A passionate Computer Engineering student with hands-on experience in research, development, and data-driven problem-solving. I thrive in collaborative environments and bring analytical thinking and technical skills to every project I take on.";
-
 export default function HeroLens() {
   const containerRef = useRef(null);
-  const [lens, setLens] = useState({ x: 0, y: 0, visible: false });
+  const [lensActive, setLensActive] = useState(true); // ✅ lens starts active
+  const [lens, setLens] = useState({ x: 0, y: 0, visible: true });
   const lensRadius = 140;
 
+  // Track container size for dynamic backgroundSize
+  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
+  useEffect(() => {
+    const updateSize = () => {
+      if (containerRef.current) {
+        setContainerSize({
+          width: containerRef.current.offsetWidth,
+          height: containerRef.current.offsetHeight,
+        });
+      }
+    };
+    updateSize();
+    window.addEventListener('resize', updateSize);
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
+
   const handleMouseMove = (e) => {
+    if (!lensActive) return;
     const rect = containerRef.current?.getBoundingClientRect();
     if (rect) {
       setLens({
@@ -25,41 +37,24 @@ export default function HeroLens() {
     }
   };
 
-  const handleMouseLeave = () => {
-    setLens((prev) => ({ ...prev, visible: false }));
+  const handleToggleLens = () => {
+    const toggled = !lensActive;
+    setLensActive(toggled);
+    setLens((prev) => ({ ...prev, visible: toggled }));
   };
-
-  const maskStyle = lens.visible
-    ? {
-        WebkitMaskImage: `radial-gradient(circle ${lensRadius}px at ${lens.x}px ${lens.y}px, transparent 0, transparent ${
-          lensRadius - 1
-        }px, black ${lensRadius}px)`,
-        maskImage: `radial-gradient(circle ${lensRadius}px at ${lens.x}px ${lens.y}px, transparent 0, transparent ${
-          lensRadius - 1
-        }px, black ${lensRadius}px)`,
-      }
-    : {};
 
   return (
     <section
       ref={containerRef}
-      className="relative z-10 w-screen h-screen flex items-center justify-center overflow-hidden bg-black"
-      style={{ cursor: "none" }}
+      className="relative z-10 w-screen h-screen flex items-center justify-center overflow-hidden bg-black snap-start"
+      onClick={handleToggleLens}
       onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
     >
-      {/* Background images */}
-      <img
-        src={ORIG_IMAGE}
-        alt="Original Hero"
-        className="absolute inset-0 w-full h-full object-cover z-0"
-        draggable={false}
-      />
+      {/* Background polygonal image (always visible) */}
       <img
         src={POLY_IMAGE}
         alt="Polygonal Hero"
-        className="absolute inset-0 w-full h-full object-cover z-10 pointer-events-none"
-        style={maskStyle}
+        className="absolute inset-0 w-full h-full object-cover z-0"
         draggable={false}
       />
 
@@ -76,7 +71,7 @@ export default function HeroLens() {
             overflow: "hidden",
             boxShadow: "0 0 0 4px rgba(255,255,255,0.2)",
             backgroundImage: `url(${ORIG_IMAGE})`,
-            backgroundSize: "cover",
+            backgroundSize: `${containerSize.width}px ${containerSize.height}px`,
             backgroundRepeat: "no-repeat",
             backgroundPosition: `${-lens.x + lensRadius}px ${-lens.y + lensRadius}px`,
           }}
@@ -99,16 +94,18 @@ export default function HeroLens() {
         </div>
       )}
 
-      {/* Text overlay */}
-      <div className="relative z-20 text-center px-4 max-w-3xl">
+      {/* Text overlay - moved after lens and z-30 */}
+      <div className="relative z-30 text-center px-4 max-w-3xl">
         <h1 className="text-5xl md:text-7xl font-extrabold text-white drop-shadow-lg mb-4">
-          {HEADLINE}
+          Sarthak Londhe
         </h1>
         <h2 className="text-2xl md:text-3xl font-semibold text-lavender mb-6">
-          {SUBHEAD}
+          Innovative R&D Intern | Computer Engineering Student | Data & AI Enthusiast
         </h2>
         <p className="text-lg md:text-xl text-neutral-200 bg-black/40 rounded-xl p-4">
-          {BIO}
+          A passionate Computer Engineering student with hands-on experience in research, development,
+          and data-driven problem-solving. I thrive in collaborative environments and bring analytical
+          thinking and technical skills to every project I take on.
         </p>
       </div>
     </section>

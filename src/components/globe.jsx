@@ -3,7 +3,6 @@
 import createGlobe from "cobe";
 import { useMotionValue, useSpring } from "motion/react";
 import { useEffect, useRef } from "react";
-
 import { twMerge } from "tailwind-merge";
 
 const MOVEMENT_DAMPING = 1400;
@@ -16,12 +15,12 @@ const GLOBE_CONFIG = {
   phi: 0,
   theta: 0.3,
   dark: 1,
-  diffuse: 0.4,
+  diffuse: 1.5, // 🔥 Increase brightness
   mapSamples: 16000,
   mapBrightness: 1.2,
   baseColor: [1, 1, 1],
-  markerColor: [1, 1, 1],
-  glowColor: [1, 1, 1],
+  markerColor: [0.2, 0.6, 1], // 🔵 Blue-ish
+  glowColor: [0.3, 0.8, 1],   // 🔥 Blue glow
   markers: [
     { location: [14.5995, 120.9842], size: 0.03 },
     { location: [19.076, 72.8777], size: 0.1 },
@@ -66,7 +65,8 @@ export function Globe({ className, config = GLOBE_CONFIG }) {
   };
 
   useEffect(() => {
-    if (!canvasRef.current) return; // Guard against null ref
+    if (!canvasRef.current) return;
+
     const onResize = () => {
       if (canvasRef.current) {
         width = canvasRef.current.offsetWidth;
@@ -96,12 +96,7 @@ export function Globe({ className, config = GLOBE_CONFIG }) {
   }, [rs, config]);
 
   return (
-    <div
-      className={twMerge(
-        "mx-auto aspect-[1/1] w-full max-w-[600px]",
-        className
-      )}
-    >
+    <div className={twMerge("mx-auto aspect-[1/1] w-full max-w-[600px]", className)}>
       <canvas
         className={twMerge(
           "size-[30rem] opacity-0 transition-opacity duration-500 [contain:layout_paint_size]"
@@ -118,6 +113,6 @@ export function Globe({ className, config = GLOBE_CONFIG }) {
           e.touches[0] && updateMovement(e.touches[0].clientX)
         }
       />
-    </div>
-  );
+    </div>
+  );
 }
