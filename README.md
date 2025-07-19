@@ -2,7 +2,7 @@
 
 A modern, animated 3D developer portfolio built with React, Three.js, TailwindCSS, and motion effects — designed to help you stand out and showcase your skills creatively.
 
-![3d Portfolio Screenshot GitHub]((https://github.com/Sarthak-1404/Portfolio/blob/main/public/assets/Screenshot%202025-07-19%20201156.png))
+![3d Portfolio Screenshot GitHub](https://github.com/Sarthak-1404/Portfolio/blob/main/public/assets/Screenshot%202025-07-19%20201156.png)
 
 ---
 
