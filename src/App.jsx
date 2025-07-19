@@ -8,6 +8,7 @@ import Experiences from "./sections/Experiences";
 import Testimonial from "./sections/Testimonial";
 import Contact from "./sections/Contact";
 import Footer from './sections/Footer';
+import StarsBackground from "./components/StarBackground";
 
 const App = () => {
   return (
@@ -17,13 +18,37 @@ const App = () => {
       <HeroLens />
       <Hero />
       <About />
-      <Projects />
-      <Experiences />
-      <Testimonial />
-      <Contact />
-      <Footer/>
+
+      {/* Stars behind Projects */}
+      <div className="relative">
+        <StarsBackground />
+        <Projects />
+      </div>
+
+      {/* Stars behind Experiences */}
+      <div className="relative">
+        <StarsBackground />
+        <Experiences />
+      </div>
+
+      {/* Stars behind Testimonial */}
+      <div className="relative">
+        <StarsBackground />
+        <Testimonial />
+      </div>
+
+      {/* Stars behind Contact */}
+      <div className="relative">
+        <StarsBackground />
+        <Contact />
+      </div>
+
+      
+        <Footer />
+      
+      
     </div>
   );
 };
 
-export default App;
+export default App;

@@ -69,6 +69,11 @@ const About = () => {
               containerRef={grid2Container}
             />
             <Card
+              style={{ rotate: "-45deg", top: "70%", left: "25%" }}
+              image="assets/logos/react.svg"
+              containerRef={grid2Container}
+            />
+            <Card
               style={{ rotate: "-45deg", top: "5%", left: "10%" }}
               image="assets/logos/blazor-pink.png"
               containerRef={grid2Container}
