@@ -1,6 +1,16 @@
 import React, { useState } from "react";
 import ProjectDetails from "./ProjectDetails";
 
+// Helper to detect touch devices
+const isTouchDevice = () => {
+  if (typeof window === "undefined") return false;
+  return (
+    "ontouchstart" in window ||
+    navigator.maxTouchPoints > 0 ||
+    navigator.msMaxTouchPoints > 0
+  );
+};
+
 const Project = ({
   title,
   description,
@@ -11,12 +21,18 @@ const Project = ({
   setPreview,
 }) => {
   const [isHidden, setIsHidden] = useState(false);
+  const touch = isTouchDevice();
+  const previewProps = touch
+    ? {}
+    : {
+        onMouseEnter: () => setPreview(image),
+        onMouseLeave: () => setPreview(null),
+      };
   return (
     <>
       <div
         className="flex-wrap items-center justify-between py-10 space-y-14 sm:flex sm:space-y-0"
-        onMouseEnter={() => setPreview(image)}
-        onMouseLeave={() => setPreview(null)}
+        {...previewProps}
       >
         <div>
           <p className="text-2xl">{title}</p>
