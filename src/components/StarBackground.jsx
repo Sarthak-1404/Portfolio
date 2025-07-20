@@ -11,12 +11,12 @@ const StarsBackground = () => {
   useEffect(() => {
     const handleMouseMove = (e) => {
       const { innerWidth, innerHeight } = window;
-      mouseOffsetX = (e.clientX / innerWidth - 0.5) * 50; // Increased range
+      mouseOffsetX = (e.clientX / innerWidth - 0.5) * 50;
       mouseOffsetY = (e.clientY / innerHeight - 0.5) * 50;
     };
 
     const animate = () => {
-      currentX += (mouseOffsetX - currentX) * 0.1; // Increased motion speed
+      currentX += (mouseOffsetX - currentX) * 0.1;
       currentY += (mouseOffsetY - currentY) * 0.1;
 
       if (starsRef.current) {
@@ -47,7 +47,7 @@ const StarsBackground = () => {
             const x = Math.random() * 100;
             const y = Math.random() * 100;
             const radius = Math.random() * 0.8 + 0.2;
-            const duration = (Math.random() * 2 + 1).toFixed(2); // 1-3s
+            const duration = (Math.random() * 2 + 1).toFixed(2); 
             const delay = (Math.random() * 2).toFixed(2);
             return (
               <circle

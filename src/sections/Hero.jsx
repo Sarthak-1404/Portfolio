@@ -14,10 +14,10 @@ const Hero = () => {
       {/* Background layers */}
       <img src={SKY_IMAGE} alt="Sky" className="absolute inset-0 w-full h-full object-cover z-0 pointer-events-none" draggable={false} />
       <img src={MOUNTAIN_IMAGE} alt="Mountain" className="absolute inset-0 w-full h-full object-cover z-10 pointer-events-none" draggable={false} />
-      <img src={PLANETS_IMAGE} alt="Planets" className="absolute inset-0 w-full h-full object-cover z-20 pointer-events-none" draggable={false} />
+      <img src={PLANETS_IMAGE} alt="Planets" className="absolute inset-0 w-full h-full object-cover z-10 pointer-events-none" draggable={false} />
 
       {/* Content Layer */}
-      <div className="relative z-50 flex flex-col md:flex-row items-center justify-between w-full h-full px-6 md:px-16">
+      <div className="relative z-30 flex flex-col md:flex-row items-center justify-between w-full h-full px-6 md:px-16">
         {/* Left: Text */}
         <div className="w-full md:w-1/2 h-1/2 md:h-full flex items-center">
           <HeroText />

@@ -15,12 +15,12 @@ const GLOBE_CONFIG = {
   phi: 0,
   theta: 0.3,
   dark: 1,
-  diffuse: 1.5, // 🔥 Increase brightness
+  diffuse: 1.5,
   mapSamples: 16000,
   mapBrightness: 1.2,
   baseColor: [1, 1, 1],
-  markerColor: [0.2, 0.6, 1], // 🔵 Blue-ish
-  glowColor: [0.3, 0.8, 1],   // 🔥 Blue glow
+  markerColor: [0.2, 0.6, 1],
+  glowColor: [0.3, 0.8, 1],
   markers: [
     { location: [14.5995, 120.9842], size: 0.03 },
     { location: [19.076, 72.8777], size: 0.1 },

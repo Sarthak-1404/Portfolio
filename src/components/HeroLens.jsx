@@ -1,92 +1,81 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-const POLY_IMAGE = "/assets/hero-polygonal.jpg";
+const POLY_IMAGE = "/assets/poly.jpg";
 const ORIG_IMAGE = "/assets/hero-original.jpg";
 
-export default function HeroLens() {
+export default function LensEffect() {
   const containerRef = useRef(null);
-  const [lensActive, setLensActive] = useState(true); // ✅ lens starts active
-  const [lens, setLens] = useState({ x: 0, y: 0, visible: true });
-  const lensRadius = 140;
-
-  // Track container size for dynamic backgroundSize
-  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
-  useEffect(() => {
-    const updateSize = () => {
-      if (containerRef.current) {
-        setContainerSize({
-          width: containerRef.current.offsetWidth,
-          height: containerRef.current.offsetHeight,
-        });
-      }
-    };
-    updateSize();
-    window.addEventListener('resize', updateSize);
-    return () => window.removeEventListener('resize', updateSize);
-  }, []);
+  const [lensOn, setLensOn] = useState(true);
+  const [mouse, setMouse] = useState({ x: 0, y: 0 });
+  const [lensRadius, setLensRadius] = useState(70); // start near medium
+  const animationRef = useRef(null);
+  const growingRef = useRef(true);
 
   const handleMouseMove = (e) => {
-    if (!lensActive) return;
-    const rect = containerRef.current?.getBoundingClientRect();
-    if (rect) {
-      setLens({
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
-        visible: true,
-      });
-    }
+    const rect = containerRef.current.getBoundingClientRect();
+    setMouse({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
+    });
   };
 
-  const handleToggleLens = () => {
-    const toggled = !lensActive;
-    setLensActive(toggled);
-    setLens((prev) => ({ ...prev, visible: toggled }));
+  useEffect(() => {
+    const animate = () => {
+      setLensRadius((r) => {
+        if (growingRef.current) {
+          if (r >= 80) growingRef.current = false;
+          return r + 0.2;
+        } else {
+          if (r <= 60) growingRef.current = true;
+          return r - 0.2;
+        }
+      });
+      animationRef.current = requestAnimationFrame(animate);
+    };
+    animationRef.current = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animationRef.current);
+  }, []);
+
+  const handleClick = () => {
+    setLensOn((prev) => !prev);
   };
 
   return (
-    <section
+    <div
       ref={containerRef}
-      className="relative z-10 w-screen h-screen flex items-center justify-center overflow-hidden bg-black snap-start"
-      onClick={handleToggleLens}
+      className="relative w-screen h-screen overflow-hidden bg-black"
       onMouseMove={handleMouseMove}
+      onClick={handleClick}
     >
-      {/* Background polygonal image (always visible) */}
+      {/* Background Image */}
       <img
         src={POLY_IMAGE}
-        alt="Polygonal Hero"
+        alt="Polygon Background"
         className="absolute inset-0 w-full h-full object-cover z-0"
         draggable={false}
       />
 
-      {/* Lens effect */}
-      {lens.visible && (
-        <div
-          className="absolute z-20 pointer-events-none"
-          style={{
-            left: lens.x - lensRadius,
-            top: lens.y - lensRadius,
-            width: lensRadius * 2,
-            height: lensRadius * 2,
-            borderRadius: "50%",
-            overflow: "hidden",
-            boxShadow: "0 0 0 4px rgba(255,255,255,0.2)",
-            backgroundImage: `url(${ORIG_IMAGE})`,
-            backgroundSize: `${containerSize.width}px ${containerSize.height}px`,
-            backgroundRepeat: "no-repeat",
-            backgroundPosition: `${-lens.x + lensRadius}px ${-lens.y + lensRadius}px`,
-          }}
-        >
-          <div
+      {/* Lens Reveal */}
+      {lensOn && (
+        <div className="absolute inset-0 pointer-events-none z-10">
+          <img
+            src={ORIG_IMAGE}
+            alt="Original Reveal"
+            className="absolute top-0 left-0 w-full h-full object-cover"
             style={{
-              position: "absolute",
-              left: "50%",
-              top: "50%",
+              clipPath: `circle(${lensRadius}px at ${mouse.x}px ${mouse.y}px)`,
+            }}
+            draggable={false}
+          />
+          {/* + Icon at lens center */}
+          <div
+            className="absolute text-3xl font-bold text-white drop-shadow-lg select-none"
+            style={{
+              left: mouse.x,
+              top: mouse.y,
               transform: "translate(-50%, -50%)",
-              color: "white",
-              fontSize: 40,
-              fontWeight: 700,
-              textShadow: "0 2px 8px rgba(0,0,0,0.5)",
-              userSelect: "none",
+              pointerEvents: "none",
+              zIndex: 20,
             }}
           >
             +
@@ -94,20 +83,20 @@ export default function HeroLens() {
         </div>
       )}
 
-      {/* Text overlay - moved after lens and z-30 */}
-      <div className="relative z-30 text-center px-4 max-w-3xl">
-        <h1 className="text-5xl md:text-7xl font-extrabold text-white drop-shadow-lg mb-4">
-          Sarthak Londhe
+      {/* Text Content */}
+      <div className="relative z-20 h-full w-full flex flex-col items-center justify-center text-center text-white px-4">
+        <h1 className="text-5xl md:text-7xl font-extrabold drop-shadow-lg mb-4">
+          Sarthak kiran Londhe
         </h1>
         <h2 className="text-2xl md:text-3xl font-semibold text-lavender mb-6">
           Innovative R&D Intern | Computer Engineering Student | Data & AI Enthusiast
         </h2>
-        <p className="text-lg md:text-xl text-neutral-200 bg-black/40 rounded-xl p-4">
-          A passionate Computer Engineering student with hands-on experience in research, development,
-          and data-driven problem-solving. I thrive in collaborative environments and bring analytical
-          thinking and technical skills to every project I take on.
+        <p className="text-lg md:text-xl text-neutral-200 bg-black/40 rounded-xl p-4 max-w-3xl">
+          A passionate Computer Engineering student with hands-on experience in research,
+          development, and data-driven problem-solving. I thrive in collaborative environments
+          and bring analytical thinking and technical skills to every project I take on.
         </p>
       </div>
-    </section>
+    </div>
   );
 }
