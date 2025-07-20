@@ -19,6 +19,19 @@ export default function LensEffect() {
     });
   };
 
+  // Touch support for mobile
+  const handleTouchMove = (e) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    const touch = e.touches[0];
+    setMouse({
+      x: touch.clientX - rect.left,
+      y: touch.clientY - rect.top,
+    });
+  };
+
+  const handleTouchStart = handleTouchMove;
+
   useEffect(() => {
     const animate = () => {
       setLensRadius((r) => {
@@ -45,6 +58,8 @@ export default function LensEffect() {
       ref={containerRef}
       className="relative w-screen h-screen overflow-hidden bg-black"
       onMouseMove={handleMouseMove}
+      onTouchMove={handleTouchMove}
+      onTouchStart={handleTouchStart}
       onClick={handleClick}
     >
       {/* Background Image */}
